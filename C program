@@ -1,0 +1,172 @@
+#include <stdio.h>
+// Defne a structure for a student
+struct Student {
+    int rollNumber;
+    char name[50];
+    foat marks;
+};
+void accept(struct Student students[], int n)
+{
+    for (int i = 0; i < n; i++) {
+        print("Enter Roll Number for Student %d: ", i + 1);
+        scanf("%d", &students[i].rollNumber);
+        print("Enter Name for Student %d: ", i + 1);
+        scanf("%s", students[i].name);
+        print("Enter Marks for Student %d: ", i + 1);
+        scanf("%f", &students[i].marks);
+    }
+}
+void display(struct Student students[], int n)
+{
+    print("\n\nRoll No.\t\tName\t\tMarks");
+    for (int i = 0; i < n; i++) {
+        print("\n%d\t|\t%s\t|\t%.2f", students[i].rollNumber, students[i].name, students[i].marks);
+    }
+}
+// Functon to perform linear search
+int linearSearch(struct Student students[], int n, int key)
+{
+    for (int i = 0; i < n; i++) {
+        if (students[i].rollNumber == key) {
+            return i;
+        }
+    }
+    return -1; // Element not found
+}
+// Functon to perform binary search (requires sorted data)
+int binarySearch(struct Student students[], int low, int high, int key)
+{
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        if (students[mid].rollNumber == key) {
+            return mid;
+        } else if (students[mid].rollNumber < key) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return -1; // Element not found
+}
+// Functon to perform inserton sort
+void insertonSort(struct Student students[], int n)
+{
+    for (int i = 1; i < n; i++) {
+        struct Student currentStudent = students[i];
+        int j = i - 1;
+        while (j >= 0 && students[j].rollNumber > currentStudent.rollNumber) {
+            students[j + 1] = students[j];
+            j--;
+        }
+        students[j + 1] = currentStudent;
+    }
+}
+// Functon to perform selecton sort
+void selectonSort(struct Student students[], int n)
+{
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < n; j++) {
+            if (students[j].rollNumber < students[minIndex].rollNumber) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            struct Student temp = students[i];
+            students[i] = students[minIndex];
+            students[minIndex] = temp;
+        }
+    }
+}
+// Functon to perform shell sort
+void shellSort(struct Student students[], int n)
+{
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            struct Student temp = students[i];
+            int j;
+            for (j = i; j >= gap && students[j - gap].rollNumber > temp.rollNumber; j -= gap) {
+                students[j] = students[j - gap];
+            }
+            students[j] = temp;
+        }
+    }
+}
+int main()
+{
+    int n, choice, key, index;
+    print("Enter the number of students: ");
+    scanf("%d", &n);
+    struct Student students[n];
+    while (1) {
+        print("\nEnter your choice\n1.Linear Search\n2.Binary Search\n3.Inserton Sort\n4.Selecton
+              Sort\n5.Shell Sort\n6.Exit\n");
+        scanf("%d", &choice);
+        switch (choice) {
+        case 1:
+            accept(students, n);
+            display(students, n);
+            print("Enter Roll Number to search: ");
+            scanf("%d", &key);
+            index = linearSearch(students, n, key);
+            if (index != -1) {
+                print("Student Found!\n");
+                print("Roll Number: %d, Name: %s, Marks: %.2f\n", students[index].rollNumber,
+                      students[index].name, students[index].marks);
+            } else {
+                print("Student Not Found\n");
+            }
+            break;
+        case 2:
+            accept(students, n);
+            display(students, n);
+            print("Enter Roll Number to search: ");
+            scanf("%d", &key);
+            index = binarySearch(students, 0, n - 1, key);
+            if (index != -1) {
+                print("Student Found!\n");
+                print("Roll Number: %d, Name: %s, Marks: %.2f\n", students[index].rollNumber,
+                      students[index].name, students[index].marks);
+            } else {
+                print("Student Not Found\n");
+            }
+            break;
+        case 3:
+            accept(students, n);
+            display(students, n);
+            insertonSort(students, n);
+            print("\nSorted Student Database:\n");
+            for (int i = 0; i < n; i++) {
+                print("Roll Number: %d, Name: %s, Marks: %.2f\n", students[i].rollNumber,
+                      students[i].name, students[i].marks);
+            }
+            break;
+        case 4:
+            accept(students, n);
+            display(students, n);
+            selectonSort(students, n);
+            print("\nSorted Student Database:\n");
+            for (int i = 0; i < n; i++) {
+                print("Roll Number: %d, Name: %s, Marks: %.2f\n", students[i].rollNumber,
+                      students[i].name, students[i].marks);
+            }
+            break;
+        case 5:
+            accept(students, n);
+            display(students, n);
+            shellSort(students, n);
+            print("\nSorted Student Database:\n");
+            for (int i = 0; i < n; i++) {
+                print("Roll Number: %d, Name: %s, Marks: %.2f\n", students[i].rollNumber,
+                      students[i].name, students[i].marks);
+            }
+            break;
+        case 6:
+            return 0; // Exit the program
+        default:
+            print("Invalid choice\n");
+            return 1;
+        }
+    }
+    return 0;
+}
